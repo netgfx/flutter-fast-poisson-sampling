@@ -6,7 +6,7 @@ Fast 2D Poisson Disk Sampling based on a modified Bridson algorithm.
 
 ## Basic example
 
-```
+```dart
 var p = FastPoissonDiskSampling(shape: Size(500, 200), radius: 6, maxTries: 20, minDistance: 0, rng: null);
 List<List<double>> points = p.fill();
 ```
