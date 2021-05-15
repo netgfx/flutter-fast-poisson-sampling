@@ -22,7 +22,7 @@ List<List<double>> points = p.fill();
   - *shape :* Size/dimensions of the grid to generate points in, required.
   - *radius :* Minimum distance between each points, required.
   - *tries :* Maximum number of tries per point, defaults to 30.
-- *rng :* A function to use as random number generator, defaults to Math.random.
+- *rng :* A function to use as random number generator, defaults to math.Random().nextDouble().
 
 Note: "minDistance" can be used instead of "radius", ensuring API compatibility with [poisson-disk-sampling](https://github.com/kchapelier/poisson-disk-sampling).
 
