@@ -1,6 +1,6 @@
 name: fast_poisson_disk_sampling
 description: A new Flutter package project.
-version: 1.0.0
+version: 1.0.2
 homepage: https://github.com/netgfx/flutter-fast-poisson-sampling
 
 environment:

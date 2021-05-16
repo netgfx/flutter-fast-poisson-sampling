@@ -67,10 +67,11 @@ class FastPoissonDiskSampling {
     this.squaredRadius = this.radius * this.radius;
     this.radiusPlusEpsilon = this.radius + epsilon;
     this.cellSize = this.radius * math.sqrt1_2;
+    this.maxTries = math.max(3, (maxTries).ceil());
     this.angleIncrement = math.pi * 2 / this.maxTries;
     this.angleIncrementOnSuccess = piDiv3 + epsilon;
     this.triesIncrementOnSuccess = (this.angleIncrementOnSuccess / this.angleIncrement).ceil();
-    this.maxTries = math.max(3, (maxTries).ceil());
+
     neighbourhoodLength = neighbourhood.length;
 
     /// cache grid
@@ -155,7 +156,7 @@ class FastPoissonDiskSampling {
     var tries, currentPoint, currentAngle, newPoint;
 
     while (this.processList.length > 0) {
-      int index = (this.processList.length * this.rng()).toInt();
+      int index = (this.processList.length * this.rng()).toInt() | 0;
 
       currentPoint = this.processList[index];
       currentAngle = currentPoint[2];
