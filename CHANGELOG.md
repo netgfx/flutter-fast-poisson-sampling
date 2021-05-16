@@ -1,3 +1,11 @@
+## [1.0.4] - 5/16/2021.
+
+* removed dartdoc dependency from pubspec
+
+## [1.0.3] - 5/16/2021.
+
+* added proper formatting via `dartfmt -w .`
+
 ## [1.0.2] - 5/16/2021.
 
 * Fixed issue that prevented correct distribution of points

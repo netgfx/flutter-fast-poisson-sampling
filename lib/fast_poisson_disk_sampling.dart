@@ -7,6 +7,7 @@ import 'dart:ui';
 
 /// FastPoissonDiskSampling class
 class FastPoissonDiskSampling {
+  /// initializations for basic variables
   double width = 0;
   double height = 0;
   int radius = 0;
@@ -26,6 +27,7 @@ class FastPoissonDiskSampling {
   List<dynamic> processList = [];
   List<List<double>> samplePoints = [];
 
+  /// initialize neighbourhood array
   List<List<int>> neighbourhood = [
     [0, 0],
     [0, -1],
@@ -52,8 +54,6 @@ class FastPoissonDiskSampling {
 
   var neighbourhoodLength = 0;
 
-  // cache grid
-
   List<int> gridShape = [];
 
   Map<String, dynamic> grid = {};
@@ -65,6 +65,7 @@ class FastPoissonDiskSampling {
       int maxTries = 30,
       int minDistance = 0,
       Function? rng}) {
+    /// if rng is not given we default to `random`
     this.rng = rng ?? random;
     this.width = shape.width;
     this.height = shape.height;
@@ -86,13 +87,16 @@ class FastPoissonDiskSampling {
       (this.height / this.cellSize).ceil()
     ];
 
+    /// initial grid
     grid = tinyNDArray(this.gridShape);
   }
 
+  /// random function that returns a value between 0 and 1, inclusive
   double random() {
     return math.Random().nextDouble();
   }
 
+  // Returns the initial grid array (list)
   Map<String, dynamic> tinyNDArray(List<int> gridShape) {
     var dimensions = gridShape.length;
     int totalLength = 1;
