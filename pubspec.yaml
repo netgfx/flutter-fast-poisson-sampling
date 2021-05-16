@@ -1,6 +1,6 @@
 name: fast_poisson_disk_sampling
-description: A new Flutter package project.
-version: 1.0.2
+description: Dart port of the JS library https://github.com/kchapelier/fast-2d-poisson-disk-sampling. Fast 2D Poisson Disk Sampling based on a modified Bridson algorithm
+version: 1.0.3
 homepage: https://github.com/netgfx/flutter-fast-poisson-sampling
 
 environment:

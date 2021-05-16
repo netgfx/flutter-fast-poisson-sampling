@@ -59,7 +59,12 @@ class FastPoissonDiskSampling {
   Map<String, dynamic> grid = {};
 
   /// FastPoissonDiskSampling constructor
-  FastPoissonDiskSampling({Size shape = const Size(100, 100), int? radius, int maxTries = 30, int minDistance = 0, Function? rng}) {
+  FastPoissonDiskSampling(
+      {Size shape = const Size(100, 100),
+      int? radius,
+      int maxTries = 30,
+      int minDistance = 0,
+      Function? rng}) {
     this.rng = rng ?? random;
     this.width = shape.width;
     this.height = shape.height;
@@ -70,12 +75,16 @@ class FastPoissonDiskSampling {
     this.maxTries = math.max(3, (maxTries).ceil());
     this.angleIncrement = math.pi * 2 / this.maxTries;
     this.angleIncrementOnSuccess = piDiv3 + epsilon;
-    this.triesIncrementOnSuccess = (this.angleIncrementOnSuccess / this.angleIncrement).ceil();
+    this.triesIncrementOnSuccess =
+        (this.angleIncrementOnSuccess / this.angleIncrement).ceil();
 
     neighbourhoodLength = neighbourhood.length;
 
     /// cache grid
-    gridShape = [(this.width / this.cellSize).ceil(), (this.height / this.cellSize).ceil()];
+    gridShape = [
+      (this.width / this.cellSize).ceil(),
+      (this.height / this.cellSize).ceil()
+    ];
 
     grid = tinyNDArray(this.gridShape);
   }
@@ -100,14 +109,25 @@ class FastPoissonDiskSampling {
 
   /// Add a totally random point in the grid
   List<dynamic> addRandomPoint() {
-    return directAddPoint([this.rng() * this.width, this.rng() * this.height, this.rng() * math.pi * 2, 0]);
+    return directAddPoint([
+      this.rng() * this.width,
+      this.rng() * this.height,
+      this.rng() * math.pi * 2,
+      0
+    ]);
   }
 
   /// Add a given point to the grid
   List<dynamic>? addPoint(List<dynamic> point) {
-    var valid = point.length == 2 && point[0] >= 0 && point[0] < this.width && point[1] >= 0 && point[1] < this.height;
+    var valid = point.length == 2 &&
+        point[0] >= 0 &&
+        point[0] < this.width &&
+        point[1] >= 0 &&
+        point[1] < this.height;
 
-    return valid ? this.directAddPoint([point[0], point[1], this.rng() * math.pi * 2, 0]) : null;
+    return valid
+        ? this.directAddPoint([point[0], point[1], this.rng() * math.pi * 2, 0])
+        : null;
   }
 
   /// Add a given point to the grid, without any check
@@ -115,23 +135,37 @@ class FastPoissonDiskSampling {
     List<double> coordsOnly = [point[0], point[1]];
     this.processList.add(point);
     this.samplePoints.add(coordsOnly);
-    var internalArrayIndex = ((point[0] / this.cellSize).toInt() | 0) * this.grid["stride"][0] + ((point[1] / this.cellSize).toInt() | 0);
-    this.grid["data"][internalArrayIndex] = this.samplePoints.length; // store the point reference
+    var internalArrayIndex =
+        ((point[0] / this.cellSize).toInt() | 0) * this.grid["stride"][0] +
+            ((point[1] / this.cellSize).toInt() | 0);
+    this.grid["data"][internalArrayIndex] =
+        this.samplePoints.length; // store the point reference
 
     return coordsOnly;
   }
 
   /// Check whether a given point is in the neighbourhood of existing points
   bool inNeighbourhood(List<dynamic> point) {
-    var dimensionNumber = 2, stride = this.grid["stride"], neighbourIndex, internalArrayIndex, dimension, currentDimensionValue, existingPoint;
+    var dimensionNumber = 2,
+        stride = this.grid["stride"],
+        neighbourIndex,
+        internalArrayIndex,
+        dimension,
+        currentDimensionValue,
+        existingPoint;
 
-    for (neighbourIndex = 0; neighbourIndex < neighbourhoodLength; neighbourIndex++) {
+    for (neighbourIndex = 0;
+        neighbourIndex < neighbourhoodLength;
+        neighbourIndex++) {
       internalArrayIndex = 0;
 
       for (dimension = 0; dimension < dimensionNumber; dimension++) {
-        currentDimensionValue = ((point[dimension] / this.cellSize).toInt() | 0) + neighbourhood[neighbourIndex][dimension];
+        currentDimensionValue =
+            ((point[dimension] / this.cellSize).toInt() | 0) +
+                neighbourhood[neighbourIndex][dimension];
 
-        if (currentDimensionValue < 0 || currentDimensionValue >= this.gridShape[dimension]) {
+        if (currentDimensionValue < 0 ||
+            currentDimensionValue >= this.gridShape[dimension]) {
           internalArrayIndex = -1;
           break;
         }
@@ -139,10 +173,14 @@ class FastPoissonDiskSampling {
         internalArrayIndex += currentDimensionValue * stride[dimension];
       }
 
-      if (internalArrayIndex != -1 && this.grid["data"][internalArrayIndex] != 0) {
-        existingPoint = this.samplePoints[this.grid["data"][internalArrayIndex] - 1];
+      if (internalArrayIndex != -1 &&
+          this.grid["data"][internalArrayIndex] != 0) {
+        existingPoint =
+            this.samplePoints[this.grid["data"][internalArrayIndex] - 1];
 
-        if (math.pow(point[0] - existingPoint[0], 2) + math.pow(point[1] - existingPoint[1], 2) < this.squaredRadius) {
+        if (math.pow(point[0] - existingPoint[0], 2) +
+                math.pow(point[1] - existingPoint[1], 2) <
+            this.squaredRadius) {
           return true;
         }
       }
@@ -167,10 +205,19 @@ class FastPoissonDiskSampling {
       }
 
       for (; tries < this.maxTries; tries++) {
-        newPoint = [currentPoint[0] + math.cos(currentAngle) * this.radiusPlusEpsilon, currentPoint[1] + math.sin(currentAngle) * this.radiusPlusEpsilon, currentAngle, 0];
+        newPoint = [
+          currentPoint[0] + math.cos(currentAngle) * this.radiusPlusEpsilon,
+          currentPoint[1] + math.sin(currentAngle) * this.radiusPlusEpsilon,
+          currentAngle,
+          0
+        ];
 
-        if ((newPoint[0] >= 0 && newPoint[0] < this.width) && (newPoint[1] >= 0 && newPoint[1] < this.height) && !this.inNeighbourhood(newPoint)) {
-          currentPoint[2] = currentAngle + this.angleIncrementOnSuccess + this.rng() * this.angleIncrement;
+        if ((newPoint[0] >= 0 && newPoint[0] < this.width) &&
+            (newPoint[1] >= 0 && newPoint[1] < this.height) &&
+            !this.inNeighbourhood(newPoint)) {
+          currentPoint[2] = currentAngle +
+              this.angleIncrementOnSuccess +
+              this.rng() * this.angleIncrement;
           currentPoint[3] = tries + this.triesIncrementOnSuccess;
           return this.directAddPoint(newPoint);
         }
